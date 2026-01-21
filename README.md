@@ -21,4 +21,4 @@ It allows users to capture and analyze packets (TCP/UDP/IP) in real-time, with s
 **Run this single command:**
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOUR-USERNAME/MK-Network-Analyzer/main/installer.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
