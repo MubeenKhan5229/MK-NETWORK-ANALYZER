@@ -38,4 +38,4 @@ This project was developed with the help of AI for better understanding and lear
 Run the following command in the Kali Linux terminal:
 
 ```bash
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/mk-official/MK-Network-Analyzer/main/installer.sh)"
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
