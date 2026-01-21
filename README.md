@@ -12,5 +12,6 @@
 - One-command installer for easy setup
 
 ## Installation
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/mk/MK-Network-Analyzer/main/installer.sh)"
+bash 
+-c "$(curl -fsSL https://raw.githubusercontent.com/mk/MK-Network-Analyzer/main/installer.sh)"
 
