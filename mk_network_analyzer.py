@@ -1,14 +1,17 @@
 import tkinter as tk
 from scapy.all import sniff
 
+# ---------------- GUI ----------------
 root = tk.Tk()
 root.title("MK Network Analyzer")
 root.geometry("700x400")
 root.configure(bg="#1e1e2f")  # dark background
 
+# Table for packets
 text = tk.Text(root, bg="#2e2e3e", fg="white")
 text.pack(expand=True, fill=tk.BOTH)
 
+# Start/Stop buttons
 def start_sniff():
     text.insert(tk.END, "Sniffing started...\n")
     def process_packet(packet):
@@ -25,6 +28,7 @@ def start_sniff():
 
 def stop_sniff():
     text.insert(tk.END, "Sniffing stopped.\n")
+    # Note: Scapy sniff thread stopping is for demo only
 
 frame = tk.Frame(root, bg="#1e1e2f")
 frame.pack()
