@@ -12,8 +12,5 @@
 - One-command installer for easy setup
 
 ## Installation
-```bash
-git clone https://github.com/YOUR-USERNAME/MK-Network-Analyzer.git
-cd MK-Network-Analyzer
-chmod +x installer.sh
-./installer.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/mk/MK-Network-Analyzer/main/installer.sh)"
+
