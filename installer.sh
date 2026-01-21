@@ -24,9 +24,15 @@ pyinstaller --onefile --windowed "$APP_DIR/mk_network_analyzer.py"
 # Give network permissions (like Wireshark)
 sudo setcap cap_net_raw,cap_net_admin=eip "$APP_DIR/dist/$BIN_NAME"
 
-# Copy icon
-mkdir -p ~/.local/share/icons
-cp "$APP_DIR/icon.png" ~/.local/share/icons/mk-network-analyzer.png
+# Pick a default system icon from Kali (like network icon)
+SYSTEM_ICON="/usr/share/icons/hicolor/128x128/apps/network-workgroup.png"
+
+# If system icon exists, use it
+if [ -f "$SYSTEM_ICON" ]; then
+    ICON_PATH="$SYSTEM_ICON"
+else
+    ICON_PATH=""
+fi
 
 # Create desktop entry
 mkdir -p ~/.local/share/applications
@@ -35,7 +41,7 @@ cat << EOF > ~/.local/share/applications/mk-network-analyzer.desktop
 Name=MK Network Analyzer
 Comment=Network Sniffer by Mubeen Khan
 Exec=$APP_DIR/dist/$BIN_NAME
-Icon=$HOME/.local/share/icons/mk-network-analyzer.png
+Icon=$ICON_PATH
 Terminal=false
 Type=Application
 Categories=Utility;Network;
