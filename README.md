@@ -13,5 +13,5 @@
 
 ## Installation
 bash 
--c "$(curl -fsSL https://raw.githubusercontent.com/mk/MK-Network-Analyzer/main/installer.sh)"
+-c "$(curl -fsSL https://raw.githubusercontent.com/mk/MK-Network-Analyzer/master/installer.sh)"
 
