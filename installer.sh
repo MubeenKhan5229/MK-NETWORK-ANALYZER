@@ -1,30 +1,38 @@
 #!/bin/bash
-set -e
+# MK Network Analyzer Installer - One Command Install
 
-echo "[+] Installing MK Network Analyzer..."
+echo "[*] Installing MK Network Analyzer..."
 
-# Dependencies
-sudo apt update
-sudo apt install -y python3 python3-tk python3-scapy
-
-# Install location
+# Create install directory
 sudo mkdir -p /opt/mk-network-analyzer
+
+# Copy Python GUI file
 sudo cp mk_network_analyzer_gui.py /opt/mk-network-analyzer/
+
+# Make sure python file is executable
 sudo chmod +x /opt/mk-network-analyzer/mk_network_analyzer_gui.py
 
-# Command shortcut
-sudo ln -sf /opt/mk-network-analyzer/mk_network_analyzer_gui.py /usr/local/bin/mkanalyzer
+# Remove old launcher if exists
+sudo rm -f /usr/local/bin/mkanalyzer
 
-# Desktop icon
-cat <<EOF | sudo tee /usr/share/applications/mkanalyzer.desktop
+# Create new launcher
+echo -e "#!/bin/bash\nexec python3 /opt/mk-network-analyzer/mk_network_analyzer_gui.py" | sudo tee /usr/local/bin/mkanalyzer
+sudo chmod +x /usr/local/bin/mkanalyzer
+
+# Give sniffing permissions to python3 (no sudo needed later)
+sudo setcap cap_net_raw,cap_net_admin=eip $(readlink -f $(which python3))
+
+# Create desktop icon
+cat <<EOF | sudo tee /usr/share/applications/mk-network-analyzer.desktop
 [Desktop Entry]
 Name=MK Network Analyzer
-Exec=mkanalyzer
-Icon=utilities-terminal
-Type=Application
-Categories=Network;Security;
+Comment=Dark GUI Network Sniffer
+Exec=/usr/local/bin/mkanalyzer
+Icon=network-workgroup
 Terminal=false
+Type=Application
+Categories=Utility;Network;
 EOF
 
-echo "[✓] Installation complete"
-echo "Run using: mkanalyzer"
+echo "[*] Installation complete!"
+echo "You can now run the tool with the command: mkanalyzer"
