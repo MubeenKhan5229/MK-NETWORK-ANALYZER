@@ -16,3 +16,25 @@ It captures and displays TCP, UDP, and IP packets in real time using a clean and
 
 ```bash
 sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
+
+Usage
+mkanalyzer
+
+Requirements
+
+Kali Linux
+
+Python 3
+
+Scapy
+
+Tkinter
+
+Author
+
+Mubeen Khan
+Cybersecurity & Network Analysis Tool
+
+Disclaimer
+
+This tool is for educational and ethical use only.
