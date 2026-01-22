@@ -1,41 +1,18 @@
 # MK Network Analyzer
 
-MK Network Analyzer is a Python-based **dark GUI network sniffer** for Kali Linux.  
-It allows real-time packet capturing and analysis of IP, TCP, and UDP traffic with an easy-to-use professional interface.
+MK Network Analyzer is a professional dark-themed GUI network sniffer for Kali Linux.  
+It captures and displays TCP, UDP, and IP packets in real time using a clean and modern interface.
 
-This project was developed with the help of AI for better understanding and learning purposes.
-
----
-
-## ✨ Features
-
-- Dark & professional GUI
+## Features
+- Dark professional GUI
 - Real-time packet sniffing
-- Displays:
-  - Source IP
-  - Destination IP
-  - Protocol (TCP / UDP / IP)
-  - Source Port
-  - Destination Port
-- Start / Stop packet capture
-- Runs without sudo after installation
-- Desktop application with icon
-- Global terminal command: `mkanalyzer`
+- Source IP, Destination IP, Protocol, Ports
+- Start / Stop / Clear / Exit buttons
+- Desktop icon support
 - One-command installation
+- Command: `mkanalyzer`
 
----
-
-## 🖥️ Requirements
-
-- Kali Linux
-- Python 3
-- Internet connection (for installation)
-
----
-
-## 🚀 One-Command Installation
-
-Run the following command in the Kali Linux terminal:
+## Installation (One Command)
 
 ```bash
 sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
