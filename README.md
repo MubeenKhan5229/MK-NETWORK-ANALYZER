@@ -31,8 +31,11 @@ Cybersecurity & Network Analysis Tool
 ## Disclaimer
 
 This tool is for educational and ethical use only.
+# Network Detector by Mubeen Khan
 
-## Installation (One Command)
+Professional GUI-based Network Sniffer  
+Dark Theme | Kali Linux | Python
 
+## Install & Run
 ```bash
-curl -s https://raw.githubusercontent.com/MubeenKhan5229/network-detector/main/installer.sh | sudo bash && network-detector
+curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/network-detector/main/installer.sh | sudo bash && network-detector
