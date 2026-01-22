@@ -15,7 +15,7 @@ It captures and displays TCP, UDP, and IP packets in real time using a clean and
 ## Usage
 mkanalyzer
 
-Requirements
+## Requirements
 
 Kali Linux
 
@@ -25,12 +25,10 @@ Scapy
 
 Tkinter
 
-Author
-
-## Mubeen Khan
+## Author:  Mubeen Khan
 Cybersecurity & Network Analysis Tool
 
-#3 Disclaimer
+## Disclaimer
 
 This tool is for educational and ethical use only.
 
