@@ -12,12 +12,7 @@ It captures and displays TCP, UDP, and IP packets in real time using a clean and
 - One-command installation
 - Command: `mkanalyzer`
 
-## Installation (One Command)
-
-```bash
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
-
-Usage
+## Usage
 mkanalyzer
 
 Requirements
@@ -32,9 +27,14 @@ Tkinter
 
 Author
 
-Mubeen Khan
+## Mubeen Khan
 Cybersecurity & Network Analysis Tool
 
-Disclaimer
+#3 Disclaimer
 
 This tool is for educational and ethical use only.
+
+## Installation (One Command)
+
+```bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
