@@ -10,7 +10,7 @@ It captures and displays TCP, UDP, and IP packets in real time using a clean and
 - Start / Stop / Clear / Exit buttons
 - Desktop icon support
 - One-command installation
-- Command: `mkanalyzer`
+- Command: `python3 network_detector.py`
 
 ## Usage
 mkanalyzer
