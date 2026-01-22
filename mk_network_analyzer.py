@@ -1,120 +1,97 @@
 #!/usr/bin/env python3
 """
-MK Network Analyzer
-Professional Dark GUI Network Sniffer
-Author: Mubeen Khan
+MK Network Analyzer - Dark GUI Network Sniffer for Kali Linux
 """
 
-import threading
-from scapy.all import sniff, IP, TCP, UDP
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+from scapy.all import sniff, IP, TCP, UDP
+import threading
+import queue
 
+# Global variables
 sniffing = False
+packet_queue = queue.Queue()
 sniffer_thread = None
 
-# ---------- Packet Handler ----------
+# Function to process packet
 def process_packet(packet):
-    if not sniffing:
-        return
-
     if IP in packet:
         src = packet[IP].src
         dst = packet[IP].dst
-        proto = "IP"
+        proto = packet[IP].proto
+        sport = packet[TCP].sport if TCP in packet else (packet[UDP].sport if UDP in packet else "N/A")
+        dport = packet[TCP].dport if TCP in packet else (packet[UDP].dport if UDP in packet else "N/A")
+        packet_queue.put((src, dst, proto, sport, dport))
 
-        sport = "-"
-        dport = "-"
-
-        if TCP in packet:
-            proto = "TCP"
-            sport = packet[TCP].sport
-            dport = packet[TCP].dport
-        elif UDP in packet:
-            proto = "UDP"
-            sport = packet[UDP].sport
-            dport = packet[UDP].dport
-
-        table.insert("", "end", values=(src, dst, proto, sport, dport))
-
-# ---------- Sniff Control ----------
+# Thread function to sniff
 def start_sniff():
     global sniffing, sniffer_thread
     if sniffing:
         return
     sniffing = True
-    status_label.config(text="Status: Running", foreground="#00ff99")
     sniffer_thread = threading.Thread(target=lambda: sniff(prn=process_packet, store=False))
     sniffer_thread.daemon = True
     sniffer_thread.start()
+    start_button.config(state="disabled")
+    stop_button.config(state="normal")
 
 def stop_sniff():
     global sniffing
     sniffing = False
-    status_label.config(text="Status: Stopped", foreground="orange")
+    start_button.config(state="normal")
+    stop_button.config(state="disabled")
 
 def clear_table():
-    for row in table.get_children():
-        table.delete(row)
+    for row in tree.get_children():
+        tree.delete(row)
 
 def exit_app():
     stop_sniff()
     root.destroy()
 
-# ---------- GUI ----------
+# Update table periodically
+def update_table():
+    while not packet_queue.empty():
+        src, dst, proto, sport, dport = packet_queue.get()
+        tree.insert("", "end", values=(src, dst, proto, sport, dport))
+    root.after(200, update_table)
+
+# GUI
 root = tk.Tk()
 root.title("MK Network Analyzer")
-root.geometry("900x500")
+root.geometry("800x500")
 root.configure(bg="#1e1e1e")
 
+# Style
 style = ttk.Style()
 style.theme_use("default")
+style.configure("Treeview", background="#252526", foreground="white", fieldbackground="#252526", rowheight=25)
+style.configure("Treeview.Heading", background="#333333", foreground="white")
+style.configure("TButton", background="#007acc", foreground="white")
+style.map("TButton", background=[('active','#005f99')])
 
-style.configure(
-    "Treeview",
-    background="#252526",
-    foreground="white",
-    rowheight=25,
-    fieldbackground="#252526",
-    bordercolor="#3c3c3c",
-    borderwidth=0
-)
-
-style.configure(
-    "Treeview.Heading",
-    background="#333333",
-    foreground="white"
-)
-
-# ---------- Table ----------
-columns = ("Source IP", "Destination IP", "Protocol", "Source Port", "Destination Port")
-table = ttk.Treeview(root, columns=columns, show="headings")
-
-for col in columns:
-    table.heading(col, text=col)
-    table.column(col, anchor="center")
-
-table.pack(fill="both", expand=True, padx=10, pady=10)
-
-# ---------- Buttons ----------
+# Frame for buttons
 btn_frame = tk.Frame(root, bg="#1e1e1e")
-btn_frame.pack(pady=5)
+btn_frame.pack(pady=10)
 
-btn_style = {
-    "font": ("Segoe UI", 10),
-    "bg": "#007acc",
-    "fg": "white",
-    "activebackground": "#005f99",
-    "width": 12
-}
+start_button = ttk.Button(btn_frame, text="Start Sniff", command=start_sniff)
+start_button.grid(row=0, column=0, padx=5)
+stop_button = ttk.Button(btn_frame, text="Stop Sniff", command=stop_sniff, state="disabled")
+stop_button.grid(row=0, column=1, padx=5)
+clear_button = ttk.Button(btn_frame, text="Clear Table", command=clear_table)
+clear_button.grid(row=0, column=2, padx=5)
+exit_button = ttk.Button(btn_frame, text="Exit", command=exit_app)
+exit_button.grid(row=0, column=3, padx=5)
 
-tk.Button(btn_frame, text="Start", command=start_sniff, **btn_style).grid(row=0, column=0, padx=5)
-tk.Button(btn_frame, text="Stop", command=stop_sniff, **btn_style).grid(row=0, column=1, padx=5)
-tk.Button(btn_frame, text="Clear", command=clear_table, **btn_style).grid(row=0, column=2, padx=5)
-tk.Button(btn_frame, text="Exit", command=exit_app, bg="#cc0000", fg="white", width=12).grid(row=0, column=3, padx=5)
+# Table
+columns = ("Source IP", "Destination IP", "Protocol", "Src Port", "Dst Port")
+tree = ttk.Treeview(root, columns=columns, show="headings")
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=150, anchor="center")
+tree.pack(fill="both", expand=True, pady=10, padx=10)
 
-# ---------- Status ----------
-status_label = tk.Label(root, text="Status: Stopped", bg="#1e1e1e", fg="orange")
-status_label.pack(pady=5)
-
+# Start updating table
+root.after(200, update_table)
 root.mainloop()
