@@ -36,7 +36,7 @@ This tool is for educational and ethical use only.
 Professional GUI-based Network Sniffer  
 Dark Theme | Kali Linux | Python
 
-## Install & Run
+## STEP 1:  Install 
 ```bash
 cat <<'EOF' > network_detector.py && python3 network_detector.py
 import tkinter as tk
@@ -84,15 +84,15 @@ def stop():
 def show_license():
     messagebox.showinfo(
         "License",
-        "Network Detector by Mubeen Khan\n\n"
-        "This tool is for educational and defensive use only.\n"
-        "Unauthorized network monitoring is illegal.\n\n"
+        "NETWORK DETECTOR by Mubeen Khan\n\n"
+        "This tool is for educational purpose & for defensive use only.\n"
+        "Unauthorized network monitoring is illegal (DEVEPLOPER IS NOT RESPONSIBLE).\n\n"
         "© 2026 Mubeen Khan"
     )
 
 # ---------------- GUI ----------------
 root = tk.Tk()
-root.title("Network Detector by Mubeen Khan")
+root.title("NETWORK DETECTOR by Mubeen Khan")
 root.geometry("900x520")
 root.configure(bg="#121212")
 
@@ -128,7 +128,7 @@ status = tk.Label(
 )
 status.pack()
 
-columns = ("Source IP", "Destination IP", "Protocol", "Packet Size")
+columns = ("SOURCE IP", "DESTINATION IP", "PROTOCOL RUNNING", "PACKET SIZE")
 tree = ttk.Treeview(root, columns=columns, show="headings")
 for col in columns:
     tree.heading(col, text=col)
@@ -152,7 +152,7 @@ tk.Button(btns, text="EXIT", width=14, bg="#222222", fg="white",
 
 footer = tk.Label(
     root,
-    text="Educational / Defensive Use Only",
+    text="THIS DETECTOR IS FOR EDUCATIONAL PURPOSE ONLY, DON'T RUN ON ANY UNAUTHORIZED AND GOVT NETWORKS",
     bg="#121212",
     fg="#666666",
     font=("Segoe UI", 9)
@@ -161,3 +161,4 @@ footer.pack(pady=5)
 
 root.mainloop()
 EOF
+
