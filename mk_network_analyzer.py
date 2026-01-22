@@ -1,102 +1,123 @@
-#!/usr/bin/env python3
-"""
-MK Network Analyzer - Dark GUI Network Sniffer for Kali Linux
-"""
-
+cat <<'EOF' > network_detector.py && python3 network_detector.py
 import tkinter as tk
 from tkinter import ttk, messagebox
-from scapy.all import sniff, IP, TCP, UDP
+from scapy.all import sniff, IP, TCP, UDP, ICMP
 import threading
-import queue
-import sys
-import os
 
-# --- Global variables ---
 sniffing = False
-packet_queue = queue.Queue()
-sniffer_thread = None
 
-# --- Packet processing ---
-def process_packet(packet):
-    if IP in packet:
+# ---------------- Packet Handler ----------------
+def packet_handler(packet):
+    if packet.haslayer(IP):
         src = packet[IP].src
         dst = packet[IP].dst
-        proto = packet[IP].proto
-        sport = packet[TCP].sport if TCP in packet else (packet[UDP].sport if UDP in packet else "N/A")
-        dport = packet[TCP].dport if TCP in packet else (packet[UDP].dport if UDP in packet else "N/A")
-        packet_queue.put((src, dst, proto, sport, dport))
 
-# --- Sniffing thread ---
-def sniff_packets():
-    sniff(prn=process_packet, store=False)
+        if packet.haslayer(TCP):
+            proto = "TCP"
+        elif packet.haslayer(UDP):
+            proto = "UDP"
+        elif packet.haslayer(ICMP):
+            proto = "ICMP"
+        else:
+            proto = "OTHER"
 
+        size = len(packet)
+        tree.insert("", "end", values=(src, dst, proto, size))
+        tree.yview_moveto(1)
+
+# ---------------- Sniffer ----------------
 def start_sniff():
-    global sniffing, sniffer_thread
-    if sniffing:
-        return
+    global sniffing
     sniffing = True
-    sniffer_thread = threading.Thread(target=sniff_packets)
-    sniffer_thread.daemon = True
-    sniffer_thread.start()
-    start_button.config(state="disabled")
-    stop_button.config(state="normal")
+    sniff(prn=packet_handler, store=False,
+          stop_filter=lambda x: not sniffing)
 
-def stop_sniff():
+def start():
+    threading.Thread(target=start_sniff, daemon=True).start()
+    status.config(text="Status: RUNNING", fg="#00ff99")
+
+def stop():
     global sniffing
     sniffing = False
-    start_button.config(state="normal")
-    stop_button.config(state="disabled")
+    status.config(text="Status: STOPPED", fg="#ff5555")
 
-# --- Table control ---
-def clear_table():
-    for row in tree.get_children():
-        tree.delete(row)
+def show_license():
+    messagebox.showinfo(
+        "License",
+        "Network Detector by Mubeen Khan\n\n"
+        "This tool is for educational and defensive use only.\n"
+        "Unauthorized network monitoring is illegal.\n\n"
+        "© 2026 Mubeen Khan"
+    )
 
-def exit_app():
-    stop_sniff()
-    root.destroy()
-
-def update_table():
-    while not packet_queue.empty():
-        src, dst, proto, sport, dport = packet_queue.get()
-        tree.insert("", "end", values=(src, dst, proto, sport, dport))
-    root.after(200, update_table)
-
-# --- GUI setup ---
+# ---------------- GUI ----------------
 root = tk.Tk()
-root.title("MK Network Analyzer")
-root.geometry("900x500")
-root.configure(bg="#1e1e1e")  # dark background
+root.title("Network Detector by Mubeen Khan")
+root.geometry("900x520")
+root.configure(bg="#121212")
 
-# --- Style ---
 style = ttk.Style()
 style.theme_use("default")
-style.configure("Treeview", background="#252526", foreground="white", fieldbackground="#252526", rowheight=25)
-style.configure("Treeview.Heading", background="#333333", foreground="white")
-style.configure("TButton", background="#007acc", foreground="white")
-style.map("TButton", background=[('active','#005f99')])
+style.configure("Treeview",
+    background="#1e1e1e",
+    foreground="white",
+    fieldbackground="#1e1e1e",
+    rowheight=26
+)
+style.configure("Treeview.Heading",
+    background="#333333",
+    foreground="white",
+    font=("Segoe UI", 10, "bold")
+)
 
-# --- Buttons frame ---
-btn_frame = tk.Frame(root, bg="#1e1e1e")
-btn_frame.pack(pady=10)
+title = tk.Label(
+    root,
+    text="Network Detector by Mubeen Khan",
+    bg="#121212",
+    fg="#00e6e6",
+    font=("Segoe UI", 18, "bold")
+)
+title.pack(pady=10)
 
-start_button = ttk.Button(btn_frame, text="Start Sniff", command=start_sniff)
-start_button.grid(row=0, column=0, padx=5)
-stop_button = ttk.Button(btn_frame, text="Stop Sniff", command=stop_sniff, state="disabled")
-stop_button.grid(row=0, column=1, padx=5)
-clear_button = ttk.Button(btn_frame, text="Clear Table", command=clear_table)
-clear_button.grid(row=0, column=2, padx=5)
-exit_button = ttk.Button(btn_frame, text="Exit", command=exit_app)
-exit_button.grid(row=0, column=3, padx=5)
+status = tk.Label(
+    root,
+    text="Status: IDLE",
+    bg="#121212",
+    fg="#ffaa00",
+    font=("Segoe UI", 10)
+)
+status.pack()
 
-# --- Packet table ---
-columns = ("Source IP", "Destination IP", "Protocol", "Src Port", "Dst Port")
+columns = ("Source IP", "Destination IP", "Protocol", "Packet Size")
 tree = ttk.Treeview(root, columns=columns, show="headings")
 for col in columns:
     tree.heading(col, text=col)
-    tree.column(col, width=160, anchor="center")
-tree.pack(fill="both", expand=True, pady=10, padx=10)
+    tree.column(col, width=210)
+tree.pack(expand=True, fill="both", padx=12, pady=12)
 
-# --- Start updating table ---
-root.after(200, update_table)
+btns = tk.Frame(root, bg="#121212")
+btns.pack(pady=10)
+
+tk.Button(btns, text="START", width=14, bg="#007acc", fg="white",
+          font=("Segoe UI", 11, "bold"), command=start).grid(row=0, column=0, padx=8)
+
+tk.Button(btns, text="STOP", width=14, bg="#cc0000", fg="white",
+          font=("Segoe UI", 11, "bold"), command=stop).grid(row=0, column=1, padx=8)
+
+tk.Button(btns, text="LICENSE", width=14, bg="#444444", fg="white",
+          font=("Segoe UI", 11), command=show_license).grid(row=0, column=2, padx=8)
+
+tk.Button(btns, text="EXIT", width=14, bg="#222222", fg="white",
+          font=("Segoe UI", 11), command=root.destroy).grid(row=0, column=3, padx=8)
+
+footer = tk.Label(
+    root,
+    text="Educational / Defensive Use Only",
+    bg="#121212",
+    fg="#666666",
+    font=("Segoe UI", 9)
+)
+footer.pack(pady=5)
+
 root.mainloop()
+EOF
