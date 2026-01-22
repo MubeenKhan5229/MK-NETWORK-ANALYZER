@@ -35,4 +35,4 @@ This tool is for educational and ethical use only.
 ## Installation (One Command)
 
 ```bash
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MubeenKhan5229/MK-Network-Analyzer/main/installer.sh)"
